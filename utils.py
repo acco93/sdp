@@ -10,9 +10,9 @@ def parse(path: str):
 
     for item in raw_json:
 
-        node_a = item["from"]
-        node_b = item["to"]
-        bidirectional = item["bidirectional"]
+        node_a = item["fromTable"]
+        node_b = item["toTable"]
+        bidirectional = "crossFilteringBehavior" in item
 
         graph.add_node(node_a)
         graph.add_node(node_b)

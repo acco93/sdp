@@ -1,24 +1,35 @@
 [
 	{
-		"from": "users",
-		"to":	"orders",
-		"bidirectional": false
+		"fromTable": "A",
+		"toTable":	"B"
 	},
 	{
-		"from":	"orders",
-		"to":	"products",
-		"bidirectional": true
+		"fromTable": "B",
+		"toTable": "D"
 	},
 	{
-		"from":	"users",
-		"to":	"pino",
-		"bidirectional": false
+		"fromTable":	"A",
+		"toTable":	"C"
 	},
 	{
-		"from":	"pino",
-		"to":	"products",
-		"bidirectional": false
+		"fromTable":	"B",
+		"toTable":	"E",
+		"crossFilteringBehavior": true
+	},
+	{
+		"fromTable":	"E",
+		"toTable":	"C"
+	},
+	{
+		"fromTable":	"E",
+		"toTable":	"G"
+	},
+	{
+		"fromTable":	"C",
+		"toTable":	"F"
+	},
+	{
+		"fromTable":	"F",
+		"toTable":	"G"
 	}
-
-
 ]

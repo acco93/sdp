@@ -31,7 +31,6 @@ class TGraph:
         node1 = self.nodes[node_id1]
 
         node0.add_outgoing(node1)
-        node1.add_incoming(node0)
 
     def plot(self):
 
@@ -53,7 +52,11 @@ class TGraph:
         if node_id not in self.nodes:
             raise Exception("Error: " + node_id + " is not a node")
 
+        print("+++++++++++++++++++++++++++++++++++++++++++++++++")
         print("Checking paths from node '" + node_id + "'")
+
+        for nid in self.nodes:
+            self.nodes[nid].clear_runtime_parents()
 
         root = self.nodes[node_id]
 
@@ -61,7 +64,6 @@ class TGraph:
         queued_nodes.put(root)
 
         explored = set()
-        previous = set()
 
         while not queued_nodes.empty():
 
@@ -71,33 +73,37 @@ class TGraph:
                 self.__print_paths(node, root)
             else:
                 explored.add(node)
-                for outgoing in node.outgoing - previous:
+                for outgoing in node.outgoing:
+                    if outgoing in node.runtime_parents:
+                        continue
+                    outgoing.add_runtime_parent(node)
                     queued_nodes.put(outgoing)
 
-            previous.clear()
-            previous.add(node)
+    print("+++++++++++++++++++++++++++++++++++++++++++++++++")
+    print()
 
     def __print_paths(self, node, root):
 
+        print()
+        print("................................................")
         print("Node " + str(node) + " is reachable from more than one path:")
 
         previous = set()
 
-        def __recursive_print_paths(node, root, previous):
+        def __recursive_print_paths(node, root, prefix, num):
+
+            print(str(num) + " " + prefix + str(node))
 
             if node == root:
-                print(node)
                 return
-            else:
-                print(str(node) + " <- ", end="")
 
-            for incoming in node.incoming.difference(previous):
-                singleton = set()
-                singleton.add(node)
-                __recursive_print_paths(incoming, root, singleton)
+            for incoming in node.runtime_parents.difference(previous):
+                __recursive_print_paths(incoming, root, prefix + "-", num + 1)
 
-        for incoming in node.incoming.difference(previous):
-            print("\t" + str(node) + " <- ", end="")
-            singleton = set()
-            singleton.add(node)
-            __recursive_print_paths(incoming, root, singleton)
+        for incoming in node.runtime_parents.difference(previous):
+            print()
+            print("0 " + str(node))
+            __recursive_print_paths(incoming, root, prefix="-", num=1)
+
+        print("................................................")
+        print()
