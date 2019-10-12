@@ -1,0 +1,24 @@
+[
+	{
+		"from": "users",
+		"to":	"orders",
+		"bidirectional": false
+	},
+	{
+		"from":	"orders",
+		"to":	"products",
+		"bidirectional": true
+	},
+	{
+		"from":	"users",
+		"to":	"pino",
+		"bidirectional": false
+	},
+	{
+		"from":	"pino",
+		"to":	"products",
+		"bidirectional": false
+	}
+
+
+]
