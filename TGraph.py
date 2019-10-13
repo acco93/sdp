@@ -44,7 +44,8 @@ class TGraph:
             for outgoing in node.outgoing:
                 graph.add_edge(node_id, outgoing.name)
 
-        nx.draw_networkx(graph, pos=nx.kamada_kawai_layout(graph), with_labels=True, arrows=True)
+        pos = nx.kamada_kawai_layout(graph)
+        nx.draw_networkx(graph, pos=pos, with_labels=True, arrows=True)
         plt.show()
 
     def paths_from(self, node_id):
@@ -65,22 +66,35 @@ class TGraph:
 
         explored = set()
 
+        graph = nx.DiGraph()
+        show_graph = False
+
         while not queued_nodes.empty():
 
             node = queued_nodes.get()
 
+            graph.add_node(node.name)
+
             if node in explored:
                 self.__print_paths(node, root)
+                show_graph = True
             else:
                 explored.add(node)
                 for outgoing in node.outgoing:
+
+                    graph.add_node(outgoing.name)
+                    graph.add_edge(node.name, outgoing.name)
+
                     if outgoing in node.runtime_parents:
                         continue
                     outgoing.add_runtime_parent(node)
                     queued_nodes.put(outgoing)
 
-    print("+++++++++++++++++++++++++++++++++++++++++++++++++")
-    print()
+        if show_graph:
+            nx.draw_networkx(graph, pos=nx.kamada_kawai_layout(graph), with_labels=True, arrows=True)
+            plt.show()
+        print("+++++++++++++++++++++++++++++++++++++++++++++++++")
+        print()
 
     def __print_paths(self, node, root):
 
